@@ -9,22 +9,39 @@
 
     - name: copy nginx conf
       ansible.builtin.copy:
-        src: /srv/myfiles/foo.conf
-        dest: /etc/foo.conf
-#         cp nginx.conf /etc/nginx/nginx.conf
-#
-#         curl -fsSL https://rpm.nodesource.com/setup_20.x | bash -
-#         dnf install -y nodejs
-#
-#         curl -L -o /tmp/frontend.zip https://raw.githubusercontent.com/raghudevopsb89/roboshop-microservices/main/artifacts/frontend.zip
-#         rm -rf /tmp/frontend
-#         mkdir -p /tmp/frontend
-#         cd /tmp/frontend
-#         unzip /tmp/frontend.zip
-#         npm install
-#         npm run build
-#         rm -rf /usr/share/nginx/html/*
-#         cp -r out/* /usr/share/nginx/html/
-#
-#         systemctl restart nginx
-#         systemctl enable nginx
+        src: nginx.conf
+        dest: /etc/nginx/nginx.conf
+    - name: install nodejs
+      ansible.builtin.shell: curl -fsSL https://rpm.nodesource.com/setup_20.x | bash -
+
+    - name: installing nodejs
+      ansible.builtin.dnf:
+        name: nodejs
+        state: present
+
+    - name: file creation
+      ansible.builtin.file:
+        path: /tmp/frontend
+        state: absent
+
+    - name: file creation
+      ansible.builtin.file:
+        path: /tmp/frontend
+        state: directory
+
+    - name: download frontend content
+      ansible.builtin.unarchive:
+          src: https://raw.githubusercontent.com/raghudevopsb89/roboshop-microservices/main/artifacts/frontend.zip
+          dest: /tmp/frontend.zip
+          remote_src: yes
+
+    - name: npm install
+      ansible.builtin.shell: npm install; npm run build; rm -rf /usr/share/nginx/html/*; cp -r out/* /usr/share/nginx/html/
+      args:
+          chdir: /tmp/frontend
+
+    - name: nginx start
+      ansible.builtin.systemd_service:
+        name: nginx
+        state: restarted
+        enabled: yes
