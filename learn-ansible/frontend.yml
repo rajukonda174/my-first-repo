@@ -27,7 +27,7 @@
     - name: file creation
       ansible.builtin.file:
         path: /tmp/frontend
-        state: directory
+        state: present
 
     - name: download frontend content
       ansible.builtin.unarchive:
