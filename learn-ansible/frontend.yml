@@ -27,12 +27,12 @@
     - name: file creation
       ansible.builtin.file:
         path: /tmp/frontend
-        state: present
+        state: directory
 
     - name: download frontend content
       ansible.builtin.unarchive:
           src: https://raw.githubusercontent.com/raghudevopsb89/roboshop-microservices/main/artifacts/frontend.zip
-          dest: /tmp/frontend.zip
+          dest: /tmp/frontend
           remote_src: yes
 
     - name: npm install
