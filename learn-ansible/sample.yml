@@ -1,3 +1,10 @@
 - hosts: all
   tasks:
      -  ping:
+
+
+- name: My first play book
+  hosts: all
+  tasks:
+    - name: check ping
+      ansible.builtin.ping:
