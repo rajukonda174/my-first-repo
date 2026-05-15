@@ -29,6 +29,12 @@
         path: /usr/share/nginx/html/
         state: directory
 
+    - name: Ensure unzip is installed
+      ansible.builtin.package:
+        name: unzip
+        state: present
+      become: true
+
     - name: download frontend content
       ansible.builtin.unarchive:
           src: https://raw.githubusercontent.com/raghudevops89/roboshop-microservices/main/artifacts/frontend-compiled.zip
