@@ -19,7 +19,7 @@
         name:
           - golang
           - git
-          - mysql18.4
+          - mysql8.4
         state: present
 
     - name: remove /apps
