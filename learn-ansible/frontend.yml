@@ -14,10 +14,10 @@
     - name: install nodejs
       ansible.builtin.shell: curl -fsSL https://rpm.nodesource.com/setup_20.x | bash -
 
-    - name: installing nodejs
-      ansible.builtin.dnf:
-        name: nodejs
-        state: present
+#   - name: installing nodejs
+#    ansible.builtin.dnf:
+#       name: nodejs
+#      state: present
 
     - name: remove app content folder
       ansible.builtin.file:
