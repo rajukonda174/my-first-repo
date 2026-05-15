@@ -22,7 +22,7 @@
         FLUSH PRIVILEGES;
         "
   
-
+#
 #dnf install -y mysql8.4-server
 #systemctl enable mysqld
 #systemctl start mysqld
