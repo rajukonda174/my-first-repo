@@ -11,8 +11,8 @@
       ansible.builtin.copy:
         src: nginx.conf
         dest: /etc/nginx/nginx.conf
-    - name: install nodejs
-      ansible.builtin.shell: curl -fsSL https://rpm.nodesource.com/setup_20.x | bash -
+#    - name: install nodejs
+#      ansible.builtin.shell: curl -fsSL https://rpm.nodesource.com/setup_20.x | bash -
 
 #   - name: installing nodejs
 #    ansible.builtin.dnf:
