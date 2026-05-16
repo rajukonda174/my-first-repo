@@ -1,4 +1,4 @@
-- name: setup valkey
+- name: setup cart
   hosts: all
   become: yes
   tasks:
