@@ -1,0 +1,94 @@
+- name: setup shipping
+  hosts: all
+  become: yes
+  tasks:
+    - name: Create appuser
+      ansible.builtin.user:
+        name: appuser
+        system: yes
+        shell: /bin/false
+        create_home: no
+
+    - name: remove /app
+      ansible.builtin.file:
+        path: /app
+        state: absent
+
+    - name: create /app folder
+      ansible.builtin.file:
+        path: /app
+        state: directory
+    - name: copy cart service
+
+      ansible.builtin.copy:
+        src: shipping.service
+        dest: /etc/systemd/system/shipping.service
+
+    - name: Install java-21-openjdk java-21-openjdk-devel maven mysql8.4
+      ansible.builtin.dnf:
+        name:
+          - java-21-openjdk
+          - java-21-openjdk-devel
+          - maven
+          - mysql8.4
+        state: present
+
+    - name: download shipping content
+      ansible.builtin.unarchive:
+        src: https://raw.githubusercontent.com/raghudevopsb89/roboshop-microservices/main/artifacts/shipping.zip
+        dest: /app
+        remote_src: yes
+
+    - name: creating schema
+      ansible.builtin.shell: |
+            mysql -h 10.0.0.11 -u root -pRoboShop@1 < db/schema.sql
+            mysql -h 10.0.0.11 -u root -pRoboShop@1 < db/app-user.sql  
+
+    - name: build Application code
+      ansible.builtin.shell: mvn clean package -DskipTests
+                  args:
+                   chdir: /apps
+
+    - name: copy cart service
+      ansible.builtin.copy:
+        src: target/shipping.jar
+        dest: /app/shipping.jar
+
+    - name: Change file ownership, group and permissions
+      ansible.builtin.file:
+        path: /app
+        owner: appuser
+        group: appuser
+        recurse: yes
+        mode: 'o-rwx'
+
+    - name: shipping start
+      ansible.builtin.systemd_service:
+        name: shipping
+        state: started
+        enabled: yes
+        daemon_reload: yes
+
+
+#dnf install -y java-21-openjdk java-21-openjdk-devel maven mysql8.4
+#cp shipping.service /etc/systemd/system/shipping.service
+#
+
+#curl -L -o /tmp/shipping.zip https://raw.githubusercontent.com/raghudevopsb89/roboshop-microservices/main/artifacts/shipping.zip
+#rm -rf /app
+#mkdir -p /app
+#cd /app
+#unzip /tmp/shipping.zip
+#mysql -h mysql-dev.rdevopsb89.online -u root -pRoboShop@1 < db/schema.sql
+#mysql -h mysql-dev.rdevopsb89.online -u root -pRoboShop@1 < db/app-user.sql
+#
+#useradd -r -s /bin/false appuser
+#cd /app
+#mvn clean package -DskipTests
+#cp target/shipping.jar /app/shipping.jar
+#chown -R appuser:appuser /app
+#chmod o-rwx /app -R
+#
+#systemctl daemon-reload
+#systemctl enable shipping
+#systemctl restart shipping
