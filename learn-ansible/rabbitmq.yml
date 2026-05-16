@@ -1,0 +1,51 @@
+- name: setup rabbitmq
+  hosts: all
+  become: yes
+  tasks:
+      - name:
+        ansible.builtin.copy:
+            src: rabbitmq.repo
+            dest: /etc/yum.repos.d/rabbitmq.repo
+
+      - name: Install rabbitmq-server&erlang
+        ansible.builtin.dnf:
+          name:
+               - rabbitmq-server
+               - erlang
+          state: present
+
+      - name: Enables the rabbitmq_management plugin
+        community.rabbitmq.rabbitmq_plugin:
+          names: rabbitmq_management
+          state: enabled
+
+      - name: Start RabbitMQ service
+        ansible.builtin.systemd_service:
+            name: rabbitmq-server
+            state: restarted
+
+      - name: creating rabbitmq user
+        community.rabbitmq.rabbitmq_user:
+          user: roboshop
+          password: RoboShop@1
+          tags: administrator
+          vhost: /
+          configure_priv: .*
+          read_priv: .*
+          write_priv: .*
+          state: present
+
+
+
+#cp rabbitmq.repo /etc/yum.repos.d/rabbitmq.repo
+#
+#dnf install -y rabbitmq-server erlang
+#systemctl enable rabbitmq-server
+#systemctl start rabbitmq-server
+#
+#rabbitmq-plugins enable rabbitmq_management
+#systemctl restart rabbitmq-server
+#
+#rabbitmqctl add_user roboshop RoboShop@1
+#rabbitmqctl set_user_tags roboshop administrator
+#rabbitmqctl set_permissions -p / roboshop ".*" ".*" ".*"
