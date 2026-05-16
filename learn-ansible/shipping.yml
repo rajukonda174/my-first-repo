@@ -54,7 +54,7 @@
       args:
          chdir: /app
 
-    - name: copy cart service
+    - name: copy shipping jar
       ansible.builtin.copy:
         src: target/shipping.jar
         dest: /app/shipping.jar
