@@ -54,11 +54,6 @@
       args:
          chdir: /app
 
-    - name: copy shipping jar
-      ansible.builtin.copy:
-        src: /app/target/shipping.jar
-        dest: /app/shipping.jar
-
 
     - name: Change file ownership, group and permissions
       ansible.builtin.file:
@@ -67,6 +62,13 @@
         group: appuser
         recurse: yes
         mode: 'o-rwx'
+
+    - name: copy shipping jar
+      ansible.builtin.copy:
+        src: /app/target/shipping.jar
+        dest: /app/shipping.jar
+        arg:
+          chdir: /app
 
     - name: shipping start
       ansible.builtin.systemd_service:
