@@ -40,9 +40,14 @@
         remote_src: yes
 
     - name: creating schema
-      ansible.builtin.shell: |
-            mysql -h 10.0.0.11 -u root -pRoboShop@1 < db/schema.sql
-            mysql -h 10.0.0.11 -u root -pRoboShop@1 < db/app-user.sql  
+      ansible.builtin.shell: mysql -h 10.0.0.11 -u root -pRoboShop@1 < db/schema.sql
+      args:
+        chdir: /app
+
+    - name: creating schema
+      ansible.builtin.shell: mysql -h 10.0.0.11 -u root -pRoboShop@1 < db/app-user.sql
+      args:
+        chdir: /app
 
     - name: build Application code
       ansible.builtin.shell: mvn clean package -DskipTests
