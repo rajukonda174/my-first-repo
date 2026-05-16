@@ -1,39 +1,38 @@
-- name: setup cart
+- name: Setup Cart Component
   hosts: all
   become: yes
   tasks:
-    - name: Create appuser
+    - name: Create Application User
       ansible.builtin.user:
         name: appuser
         system: yes
         shell: /bin/false
         create_home: no
 
-    - name: remove /app
-      ansible.builtin.file:
-        path: /app
-        state: absent
-
-    - name: create /app folder
-      ansible.builtin.file:
-        path: /app
-        state: directory
-
-    - name: downloading nodejs
-      ansible.builtin.shell:
-        cmd: curl -fsSL https://rpm.nodesource.com/setup_20.x | bash -
-
-    - name: installing nodejs
-      ansible.builtin.dnf:
-        name: nodejs
-        state: present
-
-    - name: copy cart service
+    - name: Copy SystemD Service file
       ansible.builtin.copy:
         src: cart.service
         dest: /etc/systemd/system/cart.service
 
-    - name: download cart content
+    - name: Install NodeJS
+      ansible.builtin.shell: curl -fsSL https://rpm.nodesource.com/setup_20.x | bash -
+
+    - name: Install NodeJS
+      ansible.builtin.dnf:
+        name: nodejs
+        state: present
+
+    - name: Remove folder for application
+      ansible.builtin.file:
+        path: /app
+        state: absent
+
+    - name: Create folder for application
+      ansible.builtin.file:
+        path: /app
+        state: directory
+
+    - name: Download Application Content
       ansible.builtin.unarchive:
         src: https://raw.githubusercontent.com/raghudevopsb89/roboshop-microservices/main/artifacts/cart.zip
         dest: /app
@@ -44,7 +43,7 @@
       args:
         chdir: /app
 
-    - name: Change file ownership, group and permissions
+    - name: Apply permission for application folder
       ansible.builtin.file:
         path: /app
         owner: appuser
@@ -52,30 +51,9 @@
         recurse: yes
         mode: 'o-rwx'
 
-    - name: cart start
+    - name: Start Service
       ansible.builtin.systemd_service:
         name: cart
-        state: started
+        state: restarted
         enabled: yes
         daemon_reload: yes
-
-
-#curl -fsSL https://rpm.nodesource.com/setup_20.x | bash -
-#dnf install -y nodejs
-#cp cart.service /etc/systemd/system/cart.service
-#
-#
-#useradd -r -s /bin/false appuser
-#rm -rf /app
-#mkdir -p /app
-#
-#curl -L -o /tmp/cart.zip https://raw.githubusercontent.com/raghudevopsb89/roboshop-microservices/main/artifacts/cart.zip
-#cd /app
-#unzip /tmp/cart.zip
-#npm install --production
-#chown -R appuser:appuser /app
-#chmod o-rwx /app -R
-#
-#systemctl daemon-reload
-#systemctl enable cart
-#systemctl restart cart
