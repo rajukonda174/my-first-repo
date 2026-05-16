@@ -22,7 +22,7 @@
     - name: downloading nodejs
       ansible.builtin.shell: curl -fsSL https://rpm.nodesource.com/setup_20.x | bash -
 
-    - name: install nodejs
+    - name: installing nodejs
       ansible.builtin.dnf: nodejs
       state: present
 
