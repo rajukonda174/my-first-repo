@@ -46,8 +46,8 @@
 
     - name: build Application code
       ansible.builtin.shell: mvn clean package -DskipTests
-                  args:
-                   chdir: /apps
+      args:
+         chdir: /apps
 
     - name: copy cart service
       ansible.builtin.copy:
