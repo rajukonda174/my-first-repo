@@ -23,9 +23,14 @@
         path: /app
         state: directory
 
+    - name: downloading nodejs
+      ansible.builtin.shell:
+        cmd: curl -fsSL https://rpm.nodesource.com/setup_20.x | bash -
+
     - name: installing nodejs
-      ansible.builtin.dnf: nodejs
-      state: present
+      ansible.builtin.dnf:
+        name: nodejs
+        state: present
 
     - name: copy cart service
       ansible.builtin.copy:
