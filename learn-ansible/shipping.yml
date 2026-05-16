@@ -56,8 +56,9 @@
 
     - name: copy shipping jar
       ansible.builtin.copy:
-        src: target/shipping.jar
+        src: /app/target/shipping.jar
         dest: /app/shipping.jar
+
 
     - name: Change file ownership, group and permissions
       ansible.builtin.file:
