@@ -1,0 +1,79 @@
+- name: setup rabbitmq
+  hosts: all
+  become: yes
+  tasks:
+    - name: Create appuser
+      ansible.builtin.user:
+        name: appuser
+        system: yes
+        shell: /bin/false
+        create_home: no
+
+    - name: remove /app
+      ansible.builtin.file:
+        path: /app
+        state: absent
+
+    - name: create /app folder
+      ansible.builtin.file:
+        path: /app
+        state: directory
+    - name: copy cart service
+
+    - name:
+      ansible.builtin.copy:
+        src: payment.service
+        dest: /etc/systemd/system/payment.service
+
+    - name: Install python
+      ansible.builtin.dnf:
+        name:
+          - python3
+          - python3-pip
+        state: present
+
+    - name: download payment content
+      ansible.builtin.unarchive:
+        src: https://raw.githubusercontent.com/raghudevopsb89/roboshop-microservices/main/artifacts/payment.zip
+        dest: /app
+        remote_src: yes
+
+    - name: pip installation
+      ansible.builtin.shell: pip3 install -r requirements.txt
+      args:
+        chdir: /app
+
+    - name: Change file ownership, group and permissions
+      ansible.builtin.file:
+        path: /app
+        owner: appuser
+        group: appuser
+        recurse: yes
+        mode: 'o-rwx'
+
+    - name: payment start
+      ansible.builtin.systemd_service:
+        name: payment
+        state: started
+        enabled: yes
+        daemon_reload: yes
+
+#
+#dnf install -y python3 python3-pip
+#cp payment.service /etc/systemd/system/payment.service
+#
+#
+#useradd -r -s /bin/false appuser
+#rm -rf /app
+#mkdir -p /app
+#
+#curl -L -o /tmp/payment.zip https://raw.githubusercontent.com/raghudevopsb89/roboshop-microservices/main/artifacts/payment.zip
+#cd /app
+#unzip /tmp/payment.zip
+#pip3 install -r requirements.txt
+#chown -R appuser:appuser /app
+#chmod o-rwx /app -R
+#
+#systemctl daemon-reload
+#systemctl enable payment
+#systemctl restart payment
