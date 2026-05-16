@@ -1,4 +1,4 @@
-- name: setup cart
+- name: setup user
   hosts: all
   become: yes
   tasks:
@@ -20,22 +20,22 @@
         state: directory
 
     - name: downloading nodejs
-      ansible.builtin.shell:
-        cmd: curl -fsSL https://rpm.nodesource.com/setup_20.x | bash -
+      ansible.builtin.shell: curl -fsSL https://rpm.nodesource.com/setup_20.x | bash -
 
     - name: installing nodejs
       ansible.builtin.dnf:
         name: nodejs
         state: present
 
-    - name: copy cart service
-      ansible.builtin.copy:
-        src: cart.service
-        dest: /etc/systemd/system/cart.service
 
-    - name: download cart content
+    - name: copy user service
+      ansible.builtin.copy:
+        src: user.service
+        dest: /etc/systemd/system/user.service
+
+    - name: unarchive cart content
       ansible.builtin.unarchive:
-        src: https://raw.githubusercontent.com/raghudevopsb89/roboshop-microservices/main/artifacts/cart.zip
+        src: https://raw.githubusercontent.com/raghudevopsb89/roboshop-microservices/main/artifacts/user.zip
         dest: /app
         remote_src: yes
 
@@ -52,30 +52,34 @@
         recurse: yes
         mode: 'o-rwx'
 
-    - name: cart start
+    - name: user start
       ansible.builtin.systemd_service:
-        name: cart
+        name: user
         state: started
         enabled: yes
         daemon_reload: yes
 
 
-#curl -fsSL https://rpm.nodesource.com/setup_20.x | bash -
+
+
+
+#
+#  curl -fsSL https://rpm.nodesource.com/setup_20.x | bash -
 #dnf install -y nodejs
-#cp cart.service /etc/systemd/system/cart.service
+#cp user.service /etc/systemd/system/user.service
 #
 #
 #useradd -r -s /bin/false appuser
 #rm -rf /app
 #mkdir -p /app
 #
-#curl -L -o /tmp/cart.zip https://raw.githubusercontent.com/raghudevopsb89/roboshop-microservices/main/artifacts/cart.zip
+#curl -L -o /tmp/user.zip https://raw.githubusercontent.com/raghudevopsb89/roboshop-microservices/main/artifacts/user.zip
 #cd /app
-#unzip /tmp/cart.zip
+#unzip /tmp/user.zip
 #npm install --production
 #chown -R appuser:appuser /app
 #chmod o-rwx /app -R
 #
 #systemctl daemon-reload
-#systemctl enable cart
-#systemctl restart cart
+#systemctl enable user
+#systemctl restart user
