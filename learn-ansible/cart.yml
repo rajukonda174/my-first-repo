@@ -54,11 +54,11 @@
         owner: appuser
         group: appuser
         recurse: yes
-        mode: `o-rwx`
+        mode: 'o-rwx'
 
-    - name: catalogue start
+    - name: cart start
       ansible.builtin.systemd_service:
-        name: catalogue
+        name: cart
         state: started
         enabled: yes
         daemon_reload: yes
