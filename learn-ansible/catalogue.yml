@@ -22,12 +22,12 @@
           - mysql8.4
         state: present
 
-    - name: remove /apps
+    - name: remove /app
       ansible.builtin.file:
         path: /app
         state: absent
 
-    - name: create /apps folder
+    - name: create /app folder
       ansible.builtin.file:
         path: /app
         state: directory

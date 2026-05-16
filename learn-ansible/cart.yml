@@ -1,0 +1,78 @@
+- name: setup valkey
+  hosts: all
+  become: yes
+  tasks:
+    - name: Create appuser
+      ansible.builtin.user:
+        name: appuser
+        system: yes
+        shell: /bin/false
+        create_home: no
+
+    - name: remove /app
+      ansible.builtin.file:
+        path: /app
+        state: absent
+
+    - name: create /app folder
+      ansible.builtin.file:
+        path: /app
+        state: directory
+
+    - name: install nodejs
+      ansible.builtin.shell: curl -fsSL https://rpm.nodesource.com/setup_20.x | bash -
+
+    - name: install nodejs
+      ansible.builtin.dnf: nodejs
+      state: present
+
+    - name: copy cart service
+      ansible.builtin.copy:
+        src: cart.service
+        dest: /etc/systemd/system/cart.service
+
+    - name: download cart content
+      ansible.builtin.unarchive:
+        src: https://raw.githubusercontent.com/raghudevopsb89/roboshop-microservices/main/artifacts/cart.zip
+        dest: /app
+        remote_src: yes
+
+    - name: Download App Dependencies
+      ansible.builtin.shell: npm install --production
+      args:
+        chdir: /app
+
+    - name: Change file ownership, group and permissions
+      ansible.builtin.file:
+        path: /app
+        owner: appuser
+        group: appuser
+        mode: '0-rwx'
+
+    - name: catalogue start
+      ansible.builtin.systemd_service:
+        name: catalogue
+        state: started
+        enabled: yes
+        daemon_reload: yes
+
+
+#curl -fsSL https://rpm.nodesource.com/setup_20.x | bash -
+#dnf install -y nodejs
+#cp cart.service /etc/systemd/system/cart.service
+#
+#
+#useradd -r -s /bin/false appuser
+#rm -rf /app
+#mkdir -p /app
+#
+#curl -L -o /tmp/cart.zip https://raw.githubusercontent.com/raghudevopsb89/roboshop-microservices/main/artifacts/cart.zip
+#cd /app
+#unzip /tmp/cart.zip
+#npm install --production
+#chown -R appuser:appuser /app
+#chmod o-rwx /app -R
+#
+#systemctl daemon-reload
+#systemctl enable cart
+#systemctl restart cart
