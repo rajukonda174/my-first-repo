@@ -14,11 +14,6 @@
                - erlang
           state: present
 
-      - name: Enables the rabbitmq_management plugin
-        community.rabbitmq.rabbitmq_plugin:
-          names: rabbitmq_management
-          state: enabled
-
       - name: Start RabbitMQ service
         ansible.builtin.systemd_service:
             name: rabbitmq-server
