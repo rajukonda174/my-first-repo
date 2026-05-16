@@ -54,7 +54,7 @@
         owner: appuser
         group: appuser
         recurse: yes
-        mode: 'o-rwx'
+        mode: `o-rwx`
 
     - name: catalogue start
       ansible.builtin.systemd_service:
