@@ -1,0 +1,35 @@
+- name: setup mongo database
+  hosts: all
+  become: yes
+  tasks:
+    - name: copy  mongo service
+      ansible.builtin.copy:
+        src: mongo.repo
+        dest: /etc/yum.repos.d/mongo.repo
+
+    - name: install mongodb
+      ansible.builtin.dnf:
+        name:  mongodb-org
+        state: present
+
+    - name: replace ip
+      ansible.builtin.replace:
+        path: /etc/mongod.conf
+        regexp: 'bindIp: 127.0.0.1'
+        replace: 'bindIp: 0.0.0.0'
+
+    - name: catalogue start
+      ansible.builtin.systemd_service:
+        name: mongod
+        state: started
+        enabled: yes
+
+#  cp mongo.repo /etc/yum.repos.d/mongo.repo
+#
+#    dnf install -y mongodb-org
+#    systemctl enable mongod
+#    systemctl start mongod
+#
+#  sed -i 's/bindIp: 127.0.0.1/bindIp: 0.0.0.0/' /etc/mongod.conf
+#
+#    systemctl restart mongod
