@@ -18,9 +18,9 @@
       ansible.builtin.file:
         path: /app
         state: directory
-    - name: copy cart service
 
-    - name:
+
+    - name: copy cart service
       ansible.builtin.copy:
         src: payment.service
         dest: /etc/systemd/system/payment.service
