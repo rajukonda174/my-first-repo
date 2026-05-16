@@ -9,6 +9,10 @@
         shell: /bin/false
         create_home: no
 
+    - name: downloading nodejs
+      ansible.builtin.shell:
+        cmd: curl -fsSL https://rpm.nodesource.com/setup_20.x | bash -
+
     - name: remove /app
       ansible.builtin.file:
         path: /app
@@ -18,10 +22,6 @@
       ansible.builtin.file:
         path: /app
         state: directory
-
-    - name: downloading nodejs
-      ansible.builtin.shell:
-          cmd: curl -fsSL https://rpm.nodesource.com/setup_20.x | bash -
 
     - name: installing nodejs
       ansible.builtin.dnf: nodejs
