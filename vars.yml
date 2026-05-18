@@ -1,6 +1,10 @@
 - name: variable demo
   hosts: all
   tasks:
-    - name: print Inventory variable
+    - name: print Inventory variable host
       debug:
         msg: "from_ini_host - {{ from_ini_host }}"
+
+    - name: print Inventory  group
+      debug:
+        msg: "from_ini_host - {{ from_ini_group }}"
