@@ -13,7 +13,12 @@
   hosts: all
   vars:
     from_play: 300
+  vars_files:
+    - demo_vars.yml
   tasks:
     - name: print variable - play level
       debug:
         msg: "from_play - {{ from_play }}"
+    - name: print variable - play file
+      debug:
+        msg: "from_file - {{ from_file }}"
