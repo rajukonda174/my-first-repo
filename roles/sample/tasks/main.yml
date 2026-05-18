@@ -1,6 +1,7 @@
+- name: print variable - role default
+  debug:
+    msg: "from_roles_defaults - {{ from_roles_defaults }}"
+
 - name: print variable - roles var
   debug:
     msg: "from_roles_vars - {{ from_roles_vars }}"
-- name: print variable - role default
-  debug:
-    msg: "from_roles_defaults - {{ from_role_defults}}"
