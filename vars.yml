@@ -1,0 +1,6 @@
+- name: variable demo
+  hosts: all
+  tasks:
+    - name: print Inventory variable
+      debug:
+        msg: "from_ini_host - {{ from_ini_host }}"
