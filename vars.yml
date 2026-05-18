@@ -22,3 +22,9 @@
     - name: print variable - play file
       debug:
         msg: "from_file - {{ from_file }}"
+
+- name: variable demo from role
+  hosts: all
+  roles:
+    - sample
+
