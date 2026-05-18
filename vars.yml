@@ -9,8 +9,16 @@
       debug:
         msg: "from_ini_host - {{ from_ini_group }}"
 
-
-
+- name: variable demo from play
+  hosts: all
+  vars:
+    from_play: 300
+  vars_files:
+    - demo_vars.yml
+  tasks:
+    - name: print variable - play level
+      debug:
+        msg: "from_play - {{ from_play }}"
     - name: print variable - play file
       debug:
         msg: "from_file - {{ from_file }}"
@@ -19,13 +27,12 @@
   hosts: all
   roles:
     - sample
-    -
-- name: variable demo from taks
+
+- name: variable demo from play
   hosts: all
   tasks:
-    - name: print variable - play level
+    - name: print from task level
       debug:
         msg: "from_task - {{ from_task }}"
       vars:
         from_task: 700
-
