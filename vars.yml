@@ -36,3 +36,6 @@
         msg: "from_task - {{ from_task }}"
       vars:
         from_task: 700
+    - name: print from commandline
+      debug:
+        msg: "from_cli - {{ from_cli }}"
