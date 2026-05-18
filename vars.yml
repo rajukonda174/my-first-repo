@@ -7,7 +7,7 @@
 
     - name: print Inventory  group
       debug:
-        msg: "from_ini_host - {{ from_ini_group }}"
+        msg: "from_ini_group - {{ from_ini_group }}"
 
 - name: variable demo from play
   hosts: all
