@@ -1,4 +1,4 @@
-- name: variable demo
+- name: variable demo from ini
   hosts: all
   tasks:
     - name: print Inventory variable host
@@ -8,3 +8,12 @@
     - name: print Inventory  group
       debug:
         msg: "from_ini_host - {{ from_ini_group }}"
+
+- name: variable demo from play
+  hosts: all
+  vars:
+    from_play: 300
+  tasks:
+    - name: print variable - play level
+      debug:
+        msg: "from_play - {{ from_play }}"
