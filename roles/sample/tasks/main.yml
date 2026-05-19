@@ -19,3 +19,7 @@
 - name: Demo rol import
   ansible.builtin.import_role:
      name: Demo
+
+- name: Demo role include
+  ansible.builtin.include_role:
+    name: Demo
