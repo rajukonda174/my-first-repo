@@ -1,0 +1,3 @@
+- name: message from another
+  debug:
+    msg: "message from another"

@@ -23,3 +23,8 @@
 - name: Demo role include
   ansible.builtin.include_role:
     name: Demo
+
+- name: Demo role another include task
+  ansible.builtin.include_role:
+    name: Demo
+    tasks_from: Another1.yml
