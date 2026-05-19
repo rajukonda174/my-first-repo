@@ -12,3 +12,6 @@
 
 - name: demo import task
   ansible.builtin.import_tasks: import.yml
+
+- name: demo include task
+  ansible.builtin.include_tasks: import.yml
