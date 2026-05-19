@@ -1,0 +1,5 @@
+- name: demo for import and export
+  hosts: localhost
+  connection: local
+  roles:
+    - sample
